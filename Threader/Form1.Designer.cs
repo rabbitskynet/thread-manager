@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.container = new System.Windows.Forms.ToolStripContainer();
 			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
 			this.task = new System.Windows.Forms.Label();
@@ -142,7 +141,7 @@
 			// savebutton
 			// 
 			this.savebutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.savebutton.Image = ((System.Drawing.Image)(resources.GetObject("savebutton.Image")));
+			this.savebutton.Image = global::Threader.Properties.Resources.save;
 			this.savebutton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.savebutton.Name = "savebutton";
 			this.savebutton.Size = new System.Drawing.Size(68, 68);

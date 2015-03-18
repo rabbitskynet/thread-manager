@@ -61,11 +61,21 @@ namespace Threader.Properties {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        /// </summary>
+        internal static System.Drawing.Icon threadicon {
+            get {
+                object obj = ResourceManager.GetObject("threadicon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _26931_1_ {
+        internal static System.Drawing.Bitmap threadpicture {
             get {
-                object obj = ResourceManager.GetObject("26931[1]", resourceCulture);
+                object obj = ResourceManager.GetObject("threadpicture", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

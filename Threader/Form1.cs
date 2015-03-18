@@ -15,6 +15,7 @@ namespace Threader
 		public Form1()
 		{
 			InitializeComponent();
+            this.Icon = Threader.Properties.Resources.threadicon;
 			for (char c = 'A'; c <= 'K'; c++)
 			{
 				if(c != 'J' && c != 'I')
@@ -29,6 +30,11 @@ namespace Threader
         private void tasklist_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             e.NewValue = e.CurrentValue;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
 	}
 }

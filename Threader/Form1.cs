@@ -12,6 +12,7 @@ namespace Threader
 	enum Stages { INIT, MAIN, SUB1, SUB2, SUB3, FINISH }
 	public partial class Form1 : Form
 	{
+		private Form2 taskform;
 		public Form1()
 		{
 			InitializeComponent();
@@ -25,16 +26,18 @@ namespace Threader
 			{
 				this.stages.Items.Add(s);
 			}
+			taskform = new Form2();
 		}
 
-        private void tasklist_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            e.NewValue = e.CurrentValue;
-        }
+		private void infobutton_Click(object sender, EventArgs e)
+		{
+			
+		}
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
+		private void taskbutton_Click(object sender, EventArgs e)
+		{
+			taskform.Show();
+		}
 
-        }
 	}
 }

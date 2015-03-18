@@ -28,120 +28,188 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tasklist = new System.Windows.Forms.CheckedListBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.stages = new System.Windows.Forms.CheckedListBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.SuspendLayout();
-            // 
-            // tasklist
-            // 
-            this.tasklist.FormattingEnabled = true;
-            this.tasklist.Location = new System.Drawing.Point(12, 86);
-            this.tasklist.Name = "tasklist";
-            this.tasklist.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.tasklist.Size = new System.Drawing.Size(142, 139);
-            this.tasklist.TabIndex = 0;
-            this.tasklist.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.tasklist_ItemCheck);
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(-11, -4);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(626, 74);
-            this.panel1.TabIndex = 1;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Image = global::Threader.Properties.Resources.threadpicture;
-            this.pictureBox1.Location = new System.Drawing.Point(509, 4);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(98, 67);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(53, 45);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(285, 15);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "This is small program which show threading system ";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Times New Roman", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(34, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(92, 24);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Threader";
-            // 
-            // stages
-            // 
-            this.stages.FormattingEnabled = true;
-            this.stages.Location = new System.Drawing.Point(12, 238);
-            this.stages.Name = "stages";
-            this.stages.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.stages.Size = new System.Drawing.Size(142, 94);
-            this.stages.TabIndex = 0;
-            this.stages.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.tasklist_ItemCheck);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(200, 86);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(323, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "INIT(A)->MAIN(B,C,SUB1(D)->SUB2(E,F,G)->SUB3(H))->FINISH(K)";
-            // 
-            // Form1
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(598, 345);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.stages);
-            this.Controls.Add(this.tasklist);
-            this.Name = "Form1";
-            this.Text = "Threader";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+			this.container = new System.Windows.Forms.ToolStripContainer();
+			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+			this.task = new System.Windows.Forms.Label();
+			this.stages = new System.Windows.Forms.CheckedListBox();
+			this.tasklist = new System.Windows.Forms.CheckedListBox();
+			this.menu = new System.Windows.Forms.ToolStrip();
+			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+			this.savebutton = new System.Windows.Forms.ToolStripButton();
+			this.taskbutton = new System.Windows.Forms.ToolStripButton();
+			this.infobutton = new System.Windows.Forms.ToolStripButton();
+			this.container.ContentPanel.SuspendLayout();
+			this.container.TopToolStripPanel.SuspendLayout();
+			this.container.SuspendLayout();
+			this.menu.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// container
+			// 
+			// 
+			// container.ContentPanel
+			// 
+			this.container.ContentPanel.Controls.Add(this.richTextBox1);
+			this.container.ContentPanel.Controls.Add(this.task);
+			this.container.ContentPanel.Controls.Add(this.stages);
+			this.container.ContentPanel.Controls.Add(this.tasklist);
+			this.container.ContentPanel.Size = new System.Drawing.Size(540, 274);
+			this.container.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.container.LeftToolStripPanelVisible = false;
+			this.container.Location = new System.Drawing.Point(0, 0);
+			this.container.Name = "container";
+			this.container.RightToolStripPanelVisible = false;
+			this.container.Size = new System.Drawing.Size(540, 345);
+			this.container.TabIndex = 0;
+			this.container.Text = "toolStripContainer1";
+			// 
+			// container.TopToolStripPanel
+			// 
+			this.container.TopToolStripPanel.Controls.Add(this.menu);
+			// 
+			// richTextBox1
+			// 
+			this.richTextBox1.Location = new System.Drawing.Point(174, 47);
+			this.richTextBox1.Name = "richTextBox1";
+			this.richTextBox1.Size = new System.Drawing.Size(351, 214);
+			this.richTextBox1.TabIndex = 6;
+			this.richTextBox1.Text = "";
+			// 
+			// task
+			// 
+			this.task.AutoSize = true;
+			this.task.Location = new System.Drawing.Point(191, 21);
+			this.task.Name = "task";
+			this.task.Size = new System.Drawing.Size(323, 13);
+			this.task.TabIndex = 5;
+			this.task.Text = "INIT(A)->MAIN(B,C,SUB1(D)->SUB2(E,F,G)->SUB3(H))->FINISH(K)";
+			// 
+			// stages
+			// 
+			this.stages.FormattingEnabled = true;
+			this.stages.Location = new System.Drawing.Point(19, 168);
+			this.stages.Name = "stages";
+			this.stages.SelectionMode = System.Windows.Forms.SelectionMode.None;
+			this.stages.Size = new System.Drawing.Size(142, 94);
+			this.stages.TabIndex = 3;
+			// 
+			// tasklist
+			// 
+			this.tasklist.FormattingEnabled = true;
+			this.tasklist.Location = new System.Drawing.Point(19, 16);
+			this.tasklist.Name = "tasklist";
+			this.tasklist.SelectionMode = System.Windows.Forms.SelectionMode.None;
+			this.tasklist.Size = new System.Drawing.Size(142, 139);
+			this.tasklist.TabIndex = 4;
+			// 
+			// menu
+			// 
+			this.menu.Dock = System.Windows.Forms.DockStyle.None;
+			this.menu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.menu.ImageScalingSize = new System.Drawing.Size(64, 64);
+			this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
+            this.toolStripButton2,
+            this.savebutton,
+            this.taskbutton,
+            this.infobutton});
+			this.menu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+			this.menu.Location = new System.Drawing.Point(3, 0);
+			this.menu.Name = "menu";
+			this.menu.Size = new System.Drawing.Size(372, 71);
+			this.menu.TabIndex = 1;
+			// 
+			// toolStripButton1
+			// 
+			this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton1.Image = global::Threader.Properties.Resources.start;
+			this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton1.Name = "toolStripButton1";
+			this.toolStripButton1.Size = new System.Drawing.Size(68, 68);
+			this.toolStripButton1.Text = "startbutton";
+			// 
+			// toolStripButton2
+			// 
+			this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton2.Image = global::Threader.Properties.Resources.stop;
+			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton2.Name = "toolStripButton2";
+			this.toolStripButton2.Size = new System.Drawing.Size(68, 68);
+			this.toolStripButton2.Text = "stopbutton";
+			// 
+			// savebutton
+			// 
+			this.savebutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.savebutton.Image = ((System.Drawing.Image)(resources.GetObject("savebutton.Image")));
+			this.savebutton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.savebutton.Name = "savebutton";
+			this.savebutton.Size = new System.Drawing.Size(68, 68);
+			this.savebutton.Text = "savebutton";
+			// 
+			// taskbutton
+			// 
+			this.taskbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.taskbutton.Image = global::Threader.Properties.Resources.task;
+			this.taskbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.taskbutton.Name = "taskbutton";
+			this.taskbutton.Size = new System.Drawing.Size(68, 68);
+			this.taskbutton.Text = "taskbutton";
+			this.taskbutton.Click += new System.EventHandler(this.taskbutton_Click);
+			// 
+			// infobutton
+			// 
+			this.infobutton.AutoSize = false;
+			this.infobutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.infobutton.Image = global::Threader.Properties.Resources.info;
+			this.infobutton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.infobutton.Name = "infobutton";
+			this.infobutton.Size = new System.Drawing.Size(68, 68);
+			this.infobutton.Text = "infobutton";
+			this.infobutton.Visible = false;
+			this.infobutton.Click += new System.EventHandler(this.infobutton_Click);
+			// 
+			// Form1
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(540, 345);
+			this.Controls.Add(this.container);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
+			this.MaximumSize = new System.Drawing.Size(556, 384);
+			this.MinimumSize = new System.Drawing.Size(556, 384);
+			this.Name = "Form1";
+			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			this.Text = "Threader";
+			this.container.ContentPanel.ResumeLayout(false);
+			this.container.ContentPanel.PerformLayout();
+			this.container.TopToolStripPanel.ResumeLayout(false);
+			this.container.TopToolStripPanel.PerformLayout();
+			this.container.ResumeLayout(false);
+			this.container.PerformLayout();
+			this.menu.ResumeLayout(false);
+			this.menu.PerformLayout();
+			this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.CheckedListBox tasklist;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckedListBox stages;
-        private System.Windows.Forms.Label label3;
-    }
+		private System.Windows.Forms.ToolStripContainer container;
+		private System.Windows.Forms.Label task;
+		private System.Windows.Forms.CheckedListBox stages;
+		private System.Windows.Forms.CheckedListBox tasklist;
+		private System.Windows.Forms.ToolStrip menu;
+		private System.Windows.Forms.ToolStripButton toolStripButton1;
+		private System.Windows.Forms.ToolStripButton toolStripButton2;
+		private System.Windows.Forms.ToolStripButton savebutton;
+		private System.Windows.Forms.ToolStripButton infobutton;
+		private System.Windows.Forms.RichTextBox richTextBox1;
+		private System.Windows.Forms.ToolStripButton taskbutton;
+
+	}
 }
 

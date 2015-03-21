@@ -25,15 +25,18 @@ namespace Threader
 			foreach (Stage s in this.dict)
 			{
 				string sname = s.Name.ToString();
+				s.manager = this;
 				this.treeview.Nodes.Add(sname, sname);
 				foreach (SubStage sub in s.SubStages)
 				{
 					string subname = sub.Name.ToString();
+					sub.manager = this;
 					this.treeview.Nodes[sname].Nodes.Add(subname, subname);
-					foreach (OneThread act in sub.Threads)
+					foreach (OneThread thr in sub.Threads)
 					{
-						string actname = act.name.ToString();
-						this.treeview.Nodes[sname].Nodes[subname].Nodes.Add(actname, actname);
+						string thrname = thr.name.ToString();
+						thr.manager = this;
+						this.treeview.Nodes[sname].Nodes[subname].Nodes.Add(thrname, thrname);
 					}
 				}
 			}
@@ -53,12 +56,7 @@ namespace Threader
 					while (s.status != enumStatus.Completed)
 					{
 						UpdateStatus();
-						Print("STAGE: "+s.Name+" "+s.status.ToString());
-						foreach(SubStage sub in s.SubStages)
-						{
-							Print("SUBSTG: "+sub.Name+" "+sub.status.ToString());
-						}
-						Thread.Sleep(1000);
+						Thread.Sleep(500);
 					}
 				}
 				UpdateStatus();
@@ -80,7 +78,7 @@ namespace Threader
 			}
 		}
 
-		private void UpdateStatus()
+		public void UpdateStatus()
 		{
 			TreeView collect = new TreeView();
 			foreach (Stage s in this.dict)
@@ -91,10 +89,10 @@ namespace Threader
 				{
 					string subname = sub.Name.ToString();
 					collect.Nodes[sname].Nodes.Add(subname, subname + " [" + sub.status + "]");
-					foreach (OneThread act in sub.Threads)
+					foreach (OneThread thr in sub.Threads)
 					{
-						string actname = act.name.ToString();
-						collect.Nodes[sname].Nodes[subname].Nodes.Add(actname, actname + " [" + act.status.ToString() + "]");
+						string thrname = thr.name.ToString();
+						collect.Nodes[sname].Nodes[subname].Nodes.Add(thrname, thrname + " [" + thr.status.ToString() + "]");
 					}
 				}
 			}
@@ -136,14 +134,14 @@ namespace Threader
 			//		{
 			//			this.treeview.Nodes[sname].Nodes[subname].Text = subname + " [" + sub.status + "]";
 			//		});
-			//		foreach (OneThread act in sub.Threads)
+			//		foreach (OneThread thr in sub.Threads)
 			//		{
-			//			string actname = act.name.ToString();
+			//			string thrname = thr.name.ToString();
 			//			this.treeview.Invoke((MethodInvoker)delegate()
 			//			{
-			//				this.treeview.Nodes[sname].Nodes[subname].Nodes[actname].Text = actname + " [" + act.status.ToString() + "]";
+			//				this.treeview.Nodes[sname].Nodes[subname].Nodes[thrname].Text = thrname + " [" + thr.status.ToString() + "]";
 			//			});
-			//			//this.treeview.Nodes[sname].Nodes[subname].Nodes[actname].Text = actname + " [" + act.status.ToString() + "]";
+			//			//this.treeview.Nodes[sname].Nodes[subname].Nodes[thrname].Text = thrname + " [" + act.status.ToString() + "]";
 			//		}
 			//	}
 			//}
@@ -170,7 +168,7 @@ namespace Threader
 	{
 		public enumSubStages Name;
 		public OneThread[] Threads;
-
+		public ThreadManager manager;
 		public enumStatus status
 		{
 			get
@@ -244,6 +242,7 @@ namespace Threader
 	{
 		public enumStages Name;
 		public SubStage[] SubStages;
+		public ThreadManager manager;
 		public enumStatus status
 		{
 			get
@@ -296,6 +295,11 @@ namespace Threader
 			foreach (SubStage s in this.SubStages)
 			{
 				s.Start();
+				while (s.status != enumStatus.Completed && s.Name.ToString() != "WORK")
+				{
+					this.manager.UpdateStatus();
+					Thread.Sleep(500);
+				}
 			}
 		}
 		public Stage(enumStages name, SubStage[] subs)
@@ -306,6 +310,7 @@ namespace Threader
 	}
 	class OneThread
 	{
+		public ThreadManager manager;
 		private Thread thread;
 		private Action method;
 		public enumOneThread name { get; set; }

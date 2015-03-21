@@ -98,11 +98,11 @@ namespace Threader
 		}
 		public void f1()
 		{
-			Thread.Sleep(3000);
+			Thread.Sleep(9000);
 		}
 		public void f2()
 		{
-			Thread.Sleep(3000);
+			Thread.Sleep(9000);
 		}
 		public void f3()
 		{

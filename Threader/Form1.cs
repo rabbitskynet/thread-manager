@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 
@@ -23,7 +24,7 @@ namespace Threader
 			//	if(c != 'j' && c != 'i')
 			//		this.tasklist.items.add(c);
 			//}
-			//for (enumActions ac = enumActions.A; ac <= enumActions.K; ac++)
+			//for (enumOneThread ac = enumOneThread.A; ac <= enumOneThread.K; ac++)
 			//{
 			//	this.tasklist.Items.Add(ac);
 			//}
@@ -36,30 +37,30 @@ namespace Threader
 			List<Stage> dict = new List<Stage>();
 
 			dict.Add(new Stage(enumStages.INIT, new SubStage[]{
-					new SubStage(enumSubStages.WORK,new Actions[]{
-						new Actions(enumActions.A,(data)=>generate(data))
+					new SubStage(enumSubStages.WORK,new OneThread[]{
+						new OneThread(enumOneThread.A,()=>generate())
 				})
 			}));
 			dict.Add(new Stage(enumStages.MAIN, new SubStage[]{
-					new SubStage(enumSubStages.WORK,new Actions[]{
-						new Actions(enumActions.B,(data)=>f1(data)),
-						new Actions(enumActions.C,(data)=>f2(data))
+					new SubStage(enumSubStages.WORK,new OneThread[]{
+						new OneThread(enumOneThread.B,()=>f1()),
+						new OneThread(enumOneThread.C,()=>f2())
 				}),
-					new SubStage(enumSubStages.SUB1,new Actions[]{
-						new Actions(enumActions.D,(data)=>f3(data))
+					new SubStage(enumSubStages.SUB1,new OneThread[]{
+						new OneThread(enumOneThread.D,()=>f3())
 				}),
-					new SubStage(enumSubStages.SUB2,new Actions[]{
-						new Actions(enumActions.E,(data)=>f4(data)),
-						new Actions(enumActions.F,(data)=>f5(data)),
-						new Actions(enumActions.G,(data)=>f6(data))
+					new SubStage(enumSubStages.SUB2,new OneThread[]{
+						new OneThread(enumOneThread.E,()=>f4()),
+						new OneThread(enumOneThread.F,()=>f5()),
+						new OneThread(enumOneThread.G,()=>f6())
 				}),
-					new SubStage(enumSubStages.SUB3,new Actions[]{
-						new Actions(enumActions.H,(data)=>f7(data))
+					new SubStage(enumSubStages.SUB3,new OneThread[]{
+						new OneThread(enumOneThread.H,()=>f7())
 				})
 			}));
 			dict.Add(new Stage(enumStages.FINISH, new SubStage[]{
-					new SubStage(enumSubStages.WORK,new Actions[]{
-						new Actions(enumActions.K,(data)=>f8(data))
+					new SubStage(enumSubStages.WORK,new OneThread[]{
+						new OneThread(enumOneThread.K,()=>f8())
 				})
 			}));
 
@@ -91,24 +92,42 @@ namespace Threader
 
 		}
 
-		public void generate(Object Data)
-		{ }
-		public void f1(Object Data)
-		{ }
-		public void f2(Object Data)
-		{ }
-		public void f3(Object Data)
-		{ }
-		public void f4(Object Data)
-		{ }
-		public void f5(Object Data)
-		{ }
-		public void f6(Object Data)
-		{ }
-		public void f7(Object Data)
-		{ }
-		public void f8(Object Data)
-		{ }
+		public void generate()
+		{
+			Thread.Sleep(3000);
+		}
+		public void f1()
+		{
+			Thread.Sleep(3000);
+		}
+		public void f2()
+		{
+			Thread.Sleep(3000);
+		}
+		public void f3()
+		{
+			Thread.Sleep(3000);
+		}
+		public void f4()
+		{
+			Thread.Sleep(3000);
+		}
+		public void f5()
+		{
+			Thread.Sleep(3000);
+		}
+		public void f6()
+		{
+			Thread.Sleep(3000);
+		}
+		public void f7()
+		{
+			Thread.Sleep(3000);
+		}
+		public void f8()
+		{
+			Thread.Sleep(3000);
+		}
 
 	}
 }

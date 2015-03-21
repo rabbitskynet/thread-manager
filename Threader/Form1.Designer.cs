@@ -29,16 +29,15 @@
         private void InitializeComponent()
         {
 			this.container = new System.Windows.Forms.ToolStripContainer();
-			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+			this.textbox = new System.Windows.Forms.RichTextBox();
 			this.task = new System.Windows.Forms.Label();
-			this.stages = new System.Windows.Forms.CheckedListBox();
-			this.tasklist = new System.Windows.Forms.CheckedListBox();
 			this.menu = new System.Windows.Forms.ToolStrip();
-			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+			this.startbutton = new System.Windows.Forms.ToolStripButton();
+			this.stopbutton = new System.Windows.Forms.ToolStripButton();
 			this.savebutton = new System.Windows.Forms.ToolStripButton();
 			this.taskbutton = new System.Windows.Forms.ToolStripButton();
 			this.infobutton = new System.Windows.Forms.ToolStripButton();
+			this.statustreeview = new System.Windows.Forms.TreeView();
 			this.container.ContentPanel.SuspendLayout();
 			this.container.TopToolStripPanel.SuspendLayout();
 			this.container.SuspendLayout();
@@ -50,17 +49,16 @@
 			// 
 			// container.ContentPanel
 			// 
-			this.container.ContentPanel.Controls.Add(this.richTextBox1);
+			this.container.ContentPanel.Controls.Add(this.statustreeview);
+			this.container.ContentPanel.Controls.Add(this.textbox);
 			this.container.ContentPanel.Controls.Add(this.task);
-			this.container.ContentPanel.Controls.Add(this.stages);
-			this.container.ContentPanel.Controls.Add(this.tasklist);
-			this.container.ContentPanel.Size = new System.Drawing.Size(540, 274);
+			this.container.ContentPanel.Size = new System.Drawing.Size(540, 330);
 			this.container.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.container.LeftToolStripPanelVisible = false;
 			this.container.Location = new System.Drawing.Point(0, 0);
 			this.container.Name = "container";
 			this.container.RightToolStripPanelVisible = false;
-			this.container.Size = new System.Drawing.Size(540, 345);
+			this.container.Size = new System.Drawing.Size(540, 401);
 			this.container.TabIndex = 0;
 			this.container.Text = "toolStripContainer1";
 			// 
@@ -68,40 +66,23 @@
 			// 
 			this.container.TopToolStripPanel.Controls.Add(this.menu);
 			// 
-			// richTextBox1
+			// textbox
 			// 
-			this.richTextBox1.Location = new System.Drawing.Point(174, 47);
-			this.richTextBox1.Name = "richTextBox1";
-			this.richTextBox1.Size = new System.Drawing.Size(351, 214);
-			this.richTextBox1.TabIndex = 6;
-			this.richTextBox1.Text = "";
+			this.textbox.Location = new System.Drawing.Point(194, 47);
+			this.textbox.MinimumSize = new System.Drawing.Size(331, 271);
+			this.textbox.Name = "textbox";
+			this.textbox.Size = new System.Drawing.Size(331, 271);
+			this.textbox.TabIndex = 6;
+			this.textbox.Text = "";
 			// 
 			// task
 			// 
 			this.task.AutoSize = true;
-			this.task.Location = new System.Drawing.Point(191, 21);
+			this.task.Location = new System.Drawing.Point(198, 21);
 			this.task.Name = "task";
 			this.task.Size = new System.Drawing.Size(323, 13);
 			this.task.TabIndex = 5;
 			this.task.Text = "INIT(A)->MAIN(B,C,SUB1(D)->SUB2(E,F,G)->SUB3(H))->FINISH(K)";
-			// 
-			// stages
-			// 
-			this.stages.FormattingEnabled = true;
-			this.stages.Location = new System.Drawing.Point(19, 168);
-			this.stages.Name = "stages";
-			this.stages.SelectionMode = System.Windows.Forms.SelectionMode.None;
-			this.stages.Size = new System.Drawing.Size(142, 94);
-			this.stages.TabIndex = 3;
-			// 
-			// tasklist
-			// 
-			this.tasklist.FormattingEnabled = true;
-			this.tasklist.Location = new System.Drawing.Point(19, 16);
-			this.tasklist.Name = "tasklist";
-			this.tasklist.SelectionMode = System.Windows.Forms.SelectionMode.None;
-			this.tasklist.Size = new System.Drawing.Size(142, 139);
-			this.tasklist.TabIndex = 4;
 			// 
 			// menu
 			// 
@@ -109,34 +90,36 @@
 			this.menu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.menu.ImageScalingSize = new System.Drawing.Size(64, 64);
 			this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripButton2,
+            this.startbutton,
+            this.stopbutton,
             this.savebutton,
             this.taskbutton,
             this.infobutton});
 			this.menu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
 			this.menu.Location = new System.Drawing.Point(3, 0);
 			this.menu.Name = "menu";
-			this.menu.Size = new System.Drawing.Size(372, 71);
+			this.menu.Size = new System.Drawing.Size(273, 71);
 			this.menu.TabIndex = 1;
 			// 
-			// toolStripButton1
+			// startbutton
 			// 
-			this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton1.Image = global::Threader.Properties.Resources.start;
-			this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton1.Name = "toolStripButton1";
-			this.toolStripButton1.Size = new System.Drawing.Size(68, 68);
-			this.toolStripButton1.Text = "startbutton";
+			this.startbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.startbutton.Image = global::Threader.Properties.Resources.start;
+			this.startbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.startbutton.Name = "startbutton";
+			this.startbutton.Size = new System.Drawing.Size(68, 68);
+			this.startbutton.Text = "startbutton";
+			this.startbutton.Click += new System.EventHandler(this.startbutton_Click);
 			// 
-			// toolStripButton2
+			// stopbutton
 			// 
-			this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton2.Image = global::Threader.Properties.Resources.stop;
-			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton2.Name = "toolStripButton2";
-			this.toolStripButton2.Size = new System.Drawing.Size(68, 68);
-			this.toolStripButton2.Text = "stopbutton";
+			this.stopbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.stopbutton.Image = global::Threader.Properties.Resources.stop;
+			this.stopbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.stopbutton.Name = "stopbutton";
+			this.stopbutton.Size = new System.Drawing.Size(68, 68);
+			this.stopbutton.Text = "stopbutton";
+			this.stopbutton.Click += new System.EventHandler(this.stopbutton_Click);
 			// 
 			// savebutton
 			// 
@@ -146,6 +129,7 @@
 			this.savebutton.Name = "savebutton";
 			this.savebutton.Size = new System.Drawing.Size(68, 68);
 			this.savebutton.Text = "savebutton";
+			this.savebutton.Click += new System.EventHandler(this.savebutton_Click);
 			// 
 			// taskbutton
 			// 
@@ -169,16 +153,24 @@
 			this.infobutton.Visible = false;
 			this.infobutton.Click += new System.EventHandler(this.infobutton_Click);
 			// 
+			// statustreeview
+			// 
+			this.statustreeview.Location = new System.Drawing.Point(14, 11);
+			this.statustreeview.Name = "statustreeview";
+			this.statustreeview.ShowPlusMinus = false;
+			this.statustreeview.Size = new System.Drawing.Size(171, 307);
+			this.statustreeview.TabIndex = 7;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(540, 345);
+			this.ClientSize = new System.Drawing.Size(540, 401);
 			this.Controls.Add(this.container);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
-			this.MaximumSize = new System.Drawing.Size(556, 384);
-			this.MinimumSize = new System.Drawing.Size(556, 384);
+			this.MaximumSize = new System.Drawing.Size(556, 440);
+			this.MinimumSize = new System.Drawing.Size(556, 440);
 			this.Name = "Form1";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -199,15 +191,14 @@
 
 		private System.Windows.Forms.ToolStripContainer container;
 		private System.Windows.Forms.Label task;
-		private System.Windows.Forms.CheckedListBox stages;
-		private System.Windows.Forms.CheckedListBox tasklist;
 		private System.Windows.Forms.ToolStrip menu;
-		private System.Windows.Forms.ToolStripButton toolStripButton1;
-		private System.Windows.Forms.ToolStripButton toolStripButton2;
+		private System.Windows.Forms.ToolStripButton startbutton;
+		private System.Windows.Forms.ToolStripButton stopbutton;
 		private System.Windows.Forms.ToolStripButton savebutton;
 		private System.Windows.Forms.ToolStripButton infobutton;
-		private System.Windows.Forms.RichTextBox richTextBox1;
+		private System.Windows.Forms.RichTextBox textbox;
 		private System.Windows.Forms.ToolStripButton taskbutton;
+		private System.Windows.Forms.TreeView statustreeview;
 
 	}
 }

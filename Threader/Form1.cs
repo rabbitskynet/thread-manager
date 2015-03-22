@@ -11,6 +11,8 @@ using System.Windows.Forms;
 
 namespace Threader
 {
+	enum enumOneThread { A, B, C, D, E, F, G, H, K }
+	enum enumStages { INIT, MAIN, FINISH, SUB1, SUB2, SUB3 }
 	public partial class Form1 : Form
 	{
 		private Form2 taskform;
@@ -18,53 +20,40 @@ namespace Threader
 		public Form1()
 		{
 			InitializeComponent();
-            this.Icon = Threader.Properties.Resources.threadicon;
-			//for (char c = 'a'; c <= 'k'; c++)
-			//{
-			//	if(c != 'j' && c != 'i')
-			//		this.tasklist.items.add(c);
-			//}
-			//for (enumOneThread ac = enumOneThread.A; ac <= enumOneThread.K; ac++)
-			//{
-			//	this.tasklist.Items.Add(ac);
-			//}
-			//for (enumStages s = enumStages.INIT; s <= enumStages.FINISH; s++)
-			//{
-			//	this.stages.Items.Add(s);
-			//}
+			this.Icon = Threader.Properties.Resources.threadicon;
+		}
+
+		private void Form1_Load(object sender, EventArgs e)
+		{
 			taskform = new Form2();
 
 			List<Stage> dict = new List<Stage>();
 
-			dict.Add(new Stage(enumStages.INIT, new SubStage[]{
-					new SubStage(enumSubStages.WORK,new OneThread[]{
-						new OneThread(enumOneThread.A,()=>generate())
+			dict.Add(new Stage("INIT", new OneThread[]{
+				new OneThread("A",()=>generate())
+			}));
+			dict.Add(new Stage("MAIN", new OneThread[]{
+				new OneThread("B",()=>f1()),
+				new OneThread("C",()=>f2())
+			},
+				new Stage[]{
+					new Stage("SUB1",new OneThread[]{
+						new OneThread("D",()=>f3())
+				}),
+					new Stage("SUB2",new OneThread[]{
+						new OneThread("E",()=>f4()),
+						new OneThread("F",()=>f5()),
+						new OneThread("G",()=>f6())
+				}),
+					new Stage("SUB3",new OneThread[]{
+						new OneThread("H",()=>f7())
 				})
 			}));
-			dict.Add(new Stage(enumStages.MAIN, new SubStage[]{
-					new SubStage(enumSubStages.WORK,new OneThread[]{
-						new OneThread(enumOneThread.B,()=>f1()),
-						new OneThread(enumOneThread.C,()=>f2())
-				}),
-					new SubStage(enumSubStages.SUB1,new OneThread[]{
-						new OneThread(enumOneThread.D,()=>f3())
-				}),
-					new SubStage(enumSubStages.SUB2,new OneThread[]{
-						new OneThread(enumOneThread.E,()=>f4()),
-						new OneThread(enumOneThread.F,()=>f5()),
-						new OneThread(enumOneThread.G,()=>f6())
-				}),
-					new SubStage(enumSubStages.SUB3,new OneThread[]{
-						new OneThread(enumOneThread.H,()=>f7())
-				})
-			}));
-			dict.Add(new Stage(enumStages.FINISH, new SubStage[]{
-					new SubStage(enumSubStages.WORK,new OneThread[]{
-						new OneThread(enumOneThread.K,()=>f8())
-				})
+			dict.Add(new Stage("FINISH", new OneThread[]{
+				new OneThread("K",()=>f8())
 			}));
 
-			manager = new ThreadManager(dict,this.textbox, this.statustreeview);
+			manager = new ThreadManager(dict, this.textbox, this.statustreeview);
 		}
 
 		private void infobutton_Click(object sender, EventArgs e)
@@ -89,7 +78,8 @@ namespace Threader
 
 		private void savebutton_Click(object sender, EventArgs e)
 		{
-
+			this.textbox.Text = "";
+			this.textbox.AppendText("CLICK:"+this.manager.Working().ToString());
 		}
 
 		public void generate()
@@ -127,6 +117,29 @@ namespace Threader
 		public void f8()
 		{
 			Thread.Sleep(3000);
+		}
+
+		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (this.manager.Working())
+			{
+				this.manager.Abort();
+				Console.WriteLine(Monitor.TryEnter(textbox));
+				//this.textbox.AppendText("status" + this.manager.Working().ToString() + "\n");
+				while (this.manager.Working())
+				{
+					//this.textbox.AppendText("still working\n");
+					Thread.Sleep(1000);
+				}
+				Thread.Sleep(1000);
+			}
+			this.taskform.Close();
+
+		}
+
+		private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			Console.WriteLine(Monitor.TryEnter(textbox));
 		}
 
 	}

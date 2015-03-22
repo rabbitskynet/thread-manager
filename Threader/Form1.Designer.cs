@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
 			this.container = new System.Windows.Forms.ToolStripContainer();
+			this.statustreeview = new System.Windows.Forms.TreeView();
 			this.textbox = new System.Windows.Forms.RichTextBox();
 			this.task = new System.Windows.Forms.Label();
 			this.menu = new System.Windows.Forms.ToolStrip();
@@ -37,7 +38,6 @@
 			this.savebutton = new System.Windows.Forms.ToolStripButton();
 			this.taskbutton = new System.Windows.Forms.ToolStripButton();
 			this.infobutton = new System.Windows.Forms.ToolStripButton();
-			this.statustreeview = new System.Windows.Forms.TreeView();
 			this.container.ContentPanel.SuspendLayout();
 			this.container.TopToolStripPanel.SuspendLayout();
 			this.container.SuspendLayout();
@@ -65,6 +65,14 @@
 			// container.TopToolStripPanel
 			// 
 			this.container.TopToolStripPanel.Controls.Add(this.menu);
+			// 
+			// statustreeview
+			// 
+			this.statustreeview.Location = new System.Drawing.Point(14, 11);
+			this.statustreeview.Name = "statustreeview";
+			this.statustreeview.ShowPlusMinus = false;
+			this.statustreeview.Size = new System.Drawing.Size(171, 307);
+			this.statustreeview.TabIndex = 7;
 			// 
 			// textbox
 			// 
@@ -153,14 +161,6 @@
 			this.infobutton.Visible = false;
 			this.infobutton.Click += new System.EventHandler(this.infobutton_Click);
 			// 
-			// statustreeview
-			// 
-			this.statustreeview.Location = new System.Drawing.Point(14, 11);
-			this.statustreeview.Name = "statustreeview";
-			this.statustreeview.ShowPlusMinus = false;
-			this.statustreeview.Size = new System.Drawing.Size(171, 307);
-			this.statustreeview.TabIndex = 7;
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -175,6 +175,9 @@
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Threader";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
+			this.Load += new System.EventHandler(this.Form1_Load);
 			this.container.ContentPanel.ResumeLayout(false);
 			this.container.ContentPanel.PerformLayout();
 			this.container.TopToolStripPanel.ResumeLayout(false);

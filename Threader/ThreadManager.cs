@@ -7,12 +7,11 @@ using System.Windows.Forms;
 
 namespace Threader
 {
-	enum enumOneThread { A, B, C, D, E, F, G, H, K }
-	enum enumStages { INIT, MAIN, FINISH }
-	enum enumSubStages { WORK, SUB1, SUB2, SUB3 }
-	enum enumStatus { Unstarted, Started, Paused, Completed, Unknown }
+	enum enumStatus { Unstarted, Started, Paused, Completed, Unknown, Running }
 	class ThreadManager
 	{
+		private bool stopping = false;
+		private Thread main;
 		private List<Stage> dict = new List<Stage>();
 
 		private RichTextBox textbox;
@@ -27,36 +26,44 @@ namespace Threader
 				string sname = s.Name.ToString();
 				s.manager = this;
 				this.treeview.Nodes.Add(sname, sname);
-				foreach (SubStage sub in s.SubStages)
-				{
-					string subname = sub.Name.ToString();
-					sub.manager = this;
-					this.treeview.Nodes[sname].Nodes.Add(subname, subname);
-					foreach (OneThread thr in sub.Threads)
-					{
-						string thrname = thr.name.ToString();
-						thr.manager = this;
-						this.treeview.Nodes[sname].Nodes[subname].Nodes.Add(thrname, thrname);
-					}
-				}
+				this.UpdateStatus();
 			}
 			this.treeview.ExpandAll();
 		}
 
+		public void Abort()
+		{
+			this.stopping = true;
+			foreach(Stage s in this.dict)
+			{
+				_Abort(s);
+			}
+		}
+		private void _Abort(Stage stage)
+		{
+			stage.Stop();
+			foreach (Stage s in stage.SubStages)
+			{
+				s.Stop();
+			}
+		}
 		public void Start()
 		{
-			ResetStatus();
+			ResetStatus(this.dict.ToArray());
 			UpdateStatus();
-			Thread main = new Thread(delegate()
+			main = new Thread(delegate()
 			{
 				Clear();
 				foreach (Stage s in this.dict)
 				{
-					s.Start();
-					while (s.status != enumStatus.Completed)
+					if (!this.stopping)
 					{
-						UpdateStatus();
-						Thread.Sleep(500);
+						s.Start();
+						while (s.status != enumStatus.Completed && ! this.stopping)
+						{
+							UpdateStatus();
+							Thread.Sleep(500);
+						}
 					}
 				}
 				UpdateStatus();
@@ -64,87 +71,71 @@ namespace Threader
 			main.Start();
 		}
 
-		private void ResetStatus()
+		private void ResetStatus(Stage[] list)
 		{
-			foreach (Stage s in this.dict)
+			foreach (Stage s in list)
 			{
-				foreach (SubStage sub in s.SubStages)
+				foreach (OneThread thr in s.Threads)
 				{
-					foreach (OneThread thr in sub.Threads)
-					{
-						thr.Reset();
-					}
+					thr.Reset();
+				}
+				ResetStatus(s.SubStages);
+			}
+		}
+
+		private TreeView GetList(Stage[] list)
+		{
+			TreeView main = new TreeView();
+			foreach (Stage s in list)
+			{
+				TreeNode node = main.Nodes.Add(s.Name, s.Name + " [" + s.status + "]");
+				foreach (OneThread thr in s.Threads)
+				{
+					node.Nodes.Add(thr.name, thr.name + " [" + s.status + "]");
+				}
+				foreach (TreeNode tr in this._GetList(s.SubStages))
+				{
+					node.Nodes.Add(tr);
 				}
 			}
+			return main;
+		}
+
+		private TreeNode[] _GetList(Stage[] list)
+		{
+			List<TreeNode> array = new List<TreeNode>();
+			foreach (Stage s in list)
+			{
+				TreeNode node = new TreeNode(s.Name);
+				foreach (OneThread thr in s.Threads)
+				{
+					node.Nodes.Add(thr.name, thr.name + " [" + s.status + "]");
+				}
+				foreach (TreeNode tr in this._GetList(s.SubStages))
+				{
+					node.Nodes.Add(tr);
+				}
+				array.Add(node);
+			}
+			return array.ToArray();
 		}
 
 		public void UpdateStatus()
 		{
-			TreeView collect = new TreeView();
-			foreach (Stage s in this.dict)
-			{
-				string sname = s.Name.ToString();
-				collect.Nodes.Add(sname, sname + " [" + s.status + "]");
-				foreach (SubStage sub in s.SubStages)
-				{
-					string subname = sub.Name.ToString();
-					collect.Nodes[sname].Nodes.Add(subname, subname + " [" + sub.status + "]");
-					foreach (OneThread thr in sub.Threads)
-					{
-						string thrname = thr.name.ToString();
-						collect.Nodes[sname].Nodes[subname].Nodes.Add(thrname, thrname + " [" + thr.status.ToString() + "]");
-					}
-				}
-			}
-
-			lock (this.treeview)
+			TreeView collect = this.GetList(this.dict.ToArray());
+			if (!this.stopping)
 			{
 				this.treeview.Invoke((MethodInvoker)delegate()
 				{
 					this.treeview.Nodes.Clear();
 					foreach (TreeNode node in collect.Nodes)
 					{
-						this.treeview.Nodes.Add(node.Name, node.Text);
-						foreach (TreeNode subnode in node.Nodes)
-						{
-							this.treeview.Nodes[node.Name].Nodes.Add(subnode.Name, subnode.Text);
-							foreach (TreeNode sub2node in subnode.Nodes)
-							{
-								this.treeview.Nodes[node.Name].Nodes[subnode.Name].Nodes.Add(sub2node.Name, sub2node.Text);
-							}
-						}
+						this.treeview.Nodes.Add((TreeNode)node.Clone());
 					}
 					this.treeview.ExpandAll();
 				});
+
 			}
-
-
-			//foreach (Stage s in this.dict)
-			//{
-			//	string sname = s.Name.ToString();
-			//	this.treeview.Invoke((MethodInvoker)delegate()
-			//	{
-			//		this.treeview.Nodes[sname].Text = sname + " [" + s.status + "]";
-			//	});
-				
-			//	foreach (SubStage sub in s.SubStages)
-			//	{
-			//		string subname = sub.Name.ToString();
-			//		this.treeview.Invoke((MethodInvoker)delegate()
-			//		{
-			//			this.treeview.Nodes[sname].Nodes[subname].Text = subname + " [" + sub.status + "]";
-			//		});
-			//		foreach (OneThread thr in sub.Threads)
-			//		{
-			//			string thrname = thr.name.ToString();
-			//			this.treeview.Invoke((MethodInvoker)delegate()
-			//			{
-			//				this.treeview.Nodes[sname].Nodes[subname].Nodes[thrname].Text = thrname + " [" + thr.status.ToString() + "]";
-			//			});
-			//			//this.treeview.Nodes[sname].Nodes[subname].Nodes[thrname].Text = thrname + " [" + act.status.ToString() + "]";
-			//		}
-			//	}
-			//}
 		}
 
 		public void Print(string Data)
@@ -153,6 +144,40 @@ namespace Threader
 			{
 				this.textbox.AppendText("T:" + Data + "\n");
 			});
+		}
+
+		public bool Working()
+		{
+			//bool ret = this.main != null && (_working(this.dict.ToArray()) || this.main.ThreadState != ThreadState.Stopped && this.main.ThreadState != ThreadState.Unstarted);
+			//Print("work" + ret.ToString() + "\n");
+			return _working(this.dict.ToArray());
+		}
+
+		private bool _working(Stage[] array)
+		{
+			bool total=false;
+			foreach (Stage s in array)
+			{
+				bool ww = false;
+				bool st = false;
+				if (s.Threads.Length > 0)
+				{
+					foreach (OneThread thr in s.Threads)
+					{
+						if (thr.status != ThreadState.Stopped && thr.status != ThreadState.Unstarted)
+						{
+							//Print(thr.name + " " + thr.status + "\n");
+							ww = true;
+						}
+					}
+				}
+				if (s.SubStages.Length>0)
+				{
+					st = _working(s.SubStages);
+				}
+				total = total || ww || st;
+			}
+			return total;
 		}
 
 		public void Clear()
@@ -164,11 +189,13 @@ namespace Threader
 		}
 	}
 
-	class SubStage
+	class Stage
 	{
-		public enumSubStages Name;
-		public OneThread[] Threads;
+		public OneThread[] Threads = new OneThread[0];
+		public string Name;
+		public Stage[] SubStages = new Stage[0];
 		public ThreadManager manager;
+		private bool stopping = false;
 		public enumStatus status
 		{
 			get
@@ -178,24 +205,50 @@ namespace Threader
 				bool started = true;
 				bool completed = true;
 				bool running = false;
-				foreach (OneThread thr in this.Threads)
+				if (this.Threads.Length > 0)
 				{
-					if (thr.status != ThreadState.Unstarted)
+					foreach (OneThread thr in this.Threads)
 					{
-						created = false;
+						if (thr.status != ThreadState.Unstarted)
+						{
+							created = false;
+						}
+						if (thr.status != ThreadState.Running)
+						{
+							started = false;
+							running = true;
+						}
+						if (thr.status != ThreadState.Suspended)
+						{
+							paused = false;
+						}
+						if (thr.status != ThreadState.Stopped)
+						{
+							completed = false;
+						}
 					}
-					if (thr.status != ThreadState.Running)
+				}
+				if (this.SubStages.Length > 0)
+				{
+					foreach (Stage sub in this.SubStages)
 					{
-						started = false;
-						running = true;
-					}
-					if (thr.status != ThreadState.Suspended)
-					{
-						paused = false;
-					}
-					if (thr.status != ThreadState.Stopped)
-					{
-						completed = false;
+						if (sub.status != enumStatus.Completed)
+						{
+							completed = false;
+						}
+						if (sub.status != enumStatus.Unstarted)
+						{
+							created = false;
+						}
+						if (sub.status != enumStatus.Paused)
+						{
+							paused = false;
+						}
+						if (sub.status != enumStatus.Started)
+						{
+							started = false;
+							running = true;
+						}
 					}
 				}
 				if (created)
@@ -216,104 +269,67 @@ namespace Threader
 				}
 				if (running)
 				{
-					return enumStatus.Started;
-				}else
+					return enumStatus.Running;
+				}
+				else
 				{
 					return enumStatus.Unknown;
 				}
 			}
 		}
-		public SubStage(enumSubStages name, OneThread[] threads)
-		{
-			this.Name = name;
-			this.Threads = threads;
-		}
 
 		public void Start()
 		{
-			foreach (OneThread th in this.Threads)
+			if (!this.stopping)
 			{
-				th.Start();
-			}
-		}
-	}
-
-	class Stage
-	{
-		public enumStages Name;
-		public SubStage[] SubStages;
-		public ThreadManager manager;
-		public enumStatus status
-		{
-			get
-			{
-				bool created = true;
-				bool paused = true;
-				bool started = true;
-				bool completed = true;
-				foreach (SubStage sub in this.SubStages)
+				foreach (OneThread thr in this.Threads)
 				{
-					if (sub.status != enumStatus.Completed)
+					if (!this.stopping)
 					{
-						completed = false;
-					}
-					if (sub.status != enumStatus.Unstarted)
-					{
-						created = false;
-					}
-					if (sub.status != enumStatus.Paused)
-					{
-						paused = false;
-					}
-					if (sub.status != enumStatus.Started)
-					{
-						started = false;
+						thr.Start();
 					}
 				}
-				if (created)
+				foreach (Stage s in this.SubStages)
 				{
-					return enumStatus.Unstarted;
-				}
-				if (paused)
-				{
-					return enumStatus.Paused;
-				}
-				if (completed)
-				{
-					return enumStatus.Completed;
-				}
-				if (started)
-				{
-					return enumStatus.Started;
-				}
-				return enumStatus.Unknown;
-			}
-		}
-
-		public void Start()
-		{
-			foreach (SubStage s in this.SubStages)
-			{
-				s.Start();
-				while (s.status != enumStatus.Completed && s.Name.ToString() != "WORK")
-				{
-					this.manager.UpdateStatus();
-					Thread.Sleep(500);
+					if (!this.stopping)
+					{
+						s.Start();
+						while (s.status != enumStatus.Completed && ! this.stopping)
+						{
+							this.manager.UpdateStatus();
+							Thread.Sleep(500);
+						}
+					}
 				}
 			}
 		}
-		public Stage(enumStages name, SubStage[] subs)
+		public Stage(string name, OneThread[] thr)
 		{
 			this.Name = name;
+			this.Threads = thr;
+		}
+		public Stage(string name, OneThread[] thr, Stage[] subs)
+		{
+			this.Name = name;
+			this.Threads = thr;
 			this.SubStages = subs;
+		}
+
+		public void Stop()
+		{
+			this.stopping = true;
+			foreach (OneThread thr in this.Threads)
+			{
+				thr.Stop();
+			}
 		}
 	}
 	class OneThread
 	{
-		public ThreadManager manager;
 		private Thread thread;
 		private Action method;
-		public enumOneThread name { get; set; }
+		private bool stopping = false;
+		public string name { get; set; }
 		public ThreadState status
 		{
 			get
@@ -322,11 +338,17 @@ namespace Threader
 			}
 		}
 
-		public OneThread(enumOneThread argname, Action argmethod)
+		public OneThread(string argname, Action argmethod)
 		{
 			this.name = argname;
 			this.method = argmethod;
-			this.thread = new Thread(() => this.method());
+			this.thread = new Thread(delegate(){
+				if (!this.stopping)
+				{
+					try { this.method(); }
+					catch { }
+				}
+			});
 		}
 
 		public void Start()
@@ -340,8 +362,20 @@ namespace Threader
 		{
 			if (thread.ThreadState == ThreadState.Stopped)
 			{
-				this.thread = new Thread(() => this.method());
+				this.thread = new Thread(delegate()
+				{
+					if (!this.stopping)
+					{
+						try { this.method(); }
+						catch { }
+					}
+				});
 			}
+		}
+
+		public void Stop()
+		{
+			this.stopping = true;
 		}
 	}
 }

@@ -34,7 +34,6 @@
 			this.task = new System.Windows.Forms.Label();
 			this.menu = new System.Windows.Forms.ToolStrip();
 			this.startbutton = new System.Windows.Forms.ToolStripButton();
-			this.stopbutton = new System.Windows.Forms.ToolStripButton();
 			this.savebutton = new System.Windows.Forms.ToolStripButton();
 			this.taskbutton = new System.Windows.Forms.ToolStripButton();
 			this.infobutton = new System.Windows.Forms.ToolStripButton();
@@ -99,14 +98,13 @@
 			this.menu.ImageScalingSize = new System.Drawing.Size(64, 64);
 			this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.startbutton,
-            this.stopbutton,
             this.savebutton,
             this.taskbutton,
             this.infobutton});
 			this.menu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
 			this.menu.Location = new System.Drawing.Point(3, 0);
 			this.menu.Name = "menu";
-			this.menu.Size = new System.Drawing.Size(273, 71);
+			this.menu.Size = new System.Drawing.Size(304, 71);
 			this.menu.TabIndex = 1;
 			// 
 			// startbutton
@@ -118,16 +116,6 @@
 			this.startbutton.Size = new System.Drawing.Size(68, 68);
 			this.startbutton.Text = "startbutton";
 			this.startbutton.Click += new System.EventHandler(this.startbutton_Click);
-			// 
-			// stopbutton
-			// 
-			this.stopbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.stopbutton.Image = global::Threader.Properties.Resources.stop;
-			this.stopbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.stopbutton.Name = "stopbutton";
-			this.stopbutton.Size = new System.Drawing.Size(68, 68);
-			this.stopbutton.Text = "stopbutton";
-			this.stopbutton.Click += new System.EventHandler(this.stopbutton_Click);
 			// 
 			// savebutton
 			// 
@@ -196,7 +184,6 @@
 		private System.Windows.Forms.Label task;
 		private System.Windows.Forms.ToolStrip menu;
 		private System.Windows.Forms.ToolStripButton startbutton;
-		private System.Windows.Forms.ToolStripButton stopbutton;
 		private System.Windows.Forms.ToolStripButton savebutton;
 		private System.Windows.Forms.ToolStripButton infobutton;
 		private System.Windows.Forms.RichTextBox textbox;

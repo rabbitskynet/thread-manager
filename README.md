@@ -26,7 +26,7 @@ new Stage[]{
 	new OneThread("G",(OneThread thr)=>f6(ref thr))
   }),
   new Stage("SUB3",new OneThread[]{
-		new OneThread("H",(OneThread thr)=>f7(ref thr))
+	new OneThread("H",(OneThread thr)=>f7(ref thr))
   })
 }
 ```
@@ -36,5 +36,9 @@ SUB1, SUB2 and SUB3
 wrich will work in order:
 
 **SUB1(thread D) -> SUB2(threads(E,F,G) -> SUB3(thread H)**
+
+methods will work in that order^
+
+**f3->(f4,f5,f6)->f7**
 
 All thread start parralel

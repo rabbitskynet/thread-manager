@@ -37,7 +37,7 @@ wrich will work in order:
 
 **SUB1(thread D) -> SUB2(threads(E,F,G) -> SUB3(thread H)**
 
-methods will work in that order^
+methods will work in that order:
 
 **f3->(f4,f5,f6)->f7**
 

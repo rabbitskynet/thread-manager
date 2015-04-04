@@ -15,6 +15,8 @@ namespace Threader
 		private List<Stage> dict = new List<Stage>();
 
 		public EventHandler Completed;
+		public EventHandler ThreadCompleted;
+		public EventHandler ThreadStarting;
 		private RichTextBox textbox;
 		private TreeView treeview;
 		public ThreadManager(List<Stage> argdict, RichTextBox argtextbox, TreeView statustreeview)
@@ -28,9 +30,14 @@ namespace Threader
 				string sname = s.Name.ToString();
 				s.manager = this;
 				s.parent = this;
+				foreach(OneThread thr in s.Threads)
+				{
+					thr.manager = this;
+				}
 				this.treeview.Nodes.Add(sname, sname);
 				this.UpdateStatus();
 			}
+
 			this.treeview.ExpandAll();
 		}
 
@@ -61,20 +68,21 @@ namespace Threader
 				{
 					if (!this.stopping)
 					{
+						Console.WriteLine("MAN: start " + s.Name);
 						s.Start();
 						while (s.status != enumStatus.Completed && !this.stopping && (this.treeview.Parent != null))
 						{
 							UpdateStatus();
 							Thread.Sleep(500);
 						}
-						s.progress = 100;
+						s.progress = 101;
+						Console.WriteLine("MAN: complet " + s.Name);
 						this.LastStageCompleted = s;
 					}
 				}
 				if (!this.stopping)
 				{
 					UpdateStatus();
-					
 					Completed(this,new EventArgs());
 				}
 			});
@@ -99,10 +107,10 @@ namespace Threader
 			TreeView main = new TreeView();
 			foreach (Stage s in list)
 			{
-				TreeNode node = main.Nodes.Add(s.Name, s.Name + " [" + s.status + "]" + " [" + s.progress + "]");
+				TreeNode node = main.Nodes.Add(s.Name, s.Name + " [" + s.status + "]" + " [" + s.getprogress() + "]");
 				foreach (OneThread thr in s.Threads)
 				{
-					node.Nodes.Add(thr.name, thr.name + " [" + (thr.status == ThreadState.Stopped ? "Completed" : thr.status.ToString()) + "]" + " [" + thr.progress + "]");
+					node.Nodes.Add(thr.name, thr.name + " [" + (thr.status == ThreadState.Stopped ? "Completed" : thr.status.ToString()) + "]" + " [" + thr.getprogress() + "]");
 				}
 				foreach (TreeNode tr in this._GetList(s.SubStages))
 				{
@@ -117,10 +125,10 @@ namespace Threader
 			List<TreeNode> array = new List<TreeNode>();
 			foreach (Stage s in list)
 			{
-				TreeNode node = new TreeNode(s.Name + " [" + s.status + "]" + " [" + s.progress + "]");
+				TreeNode node = new TreeNode(s.Name + " [" + s.status + "]" + " [" + s.getprogress() + "]");
 				foreach (OneThread thr in s.Threads)
 				{
-					node.Nodes.Add(thr.name, thr.name + " [" + (thr.status == ThreadState.Stopped ? "Completed" : thr.status.ToString()) + "]" + " [" + thr.progress + "]");
+					node.Nodes.Add(thr.name, thr.name + " [" + (thr.status == ThreadState.Stopped ? "Completed" : thr.status.ToString()) + "]" + " [" + thr.getprogress() + "]");
 				}
 				foreach (TreeNode tr in this._GetList(s.SubStages))
 				{
@@ -231,7 +239,26 @@ namespace Threader
 		public OneThread LastCompletedThread;
 		public Stage LastStageCompleted;
 		public Stage parent;
-		public ThreadManager manager;
+		private ThreadManager _manager;
+		public ThreadManager manager
+		{
+			set
+			{
+				_manager = value;
+				foreach (OneThread thr in this.Threads)
+				{
+					thr.manager = _manager;
+				}
+				foreach (Stage sub in this.SubStages)
+				{
+					sub.manager = _manager;
+				}
+			}
+			get
+			{
+				return _manager;
+			}
+		}
 		private bool stopping = false;
 
 		public Stage()
@@ -281,7 +308,7 @@ namespace Threader
 							this.manager.UpdateStatus();
 							Thread.Sleep(500);
 						}
-						s.progress = 100;
+						s.progress = 101;
 						this.LastStageCompleted = s;
 					}
 				}
@@ -333,27 +360,26 @@ namespace Threader
 				bool started = true;
 				bool completed = true;
 				bool running = false;
-				if (this.Threads.Length > 0)
+				int i = 0;
+				foreach (OneThread thr in this.Threads)
 				{
-					foreach (OneThread thr in this.Threads)
+					i += thr.progress;
+					if (thr.status != ThreadState.Unstarted)
 					{
-						if (thr.status != ThreadState.Unstarted)
-						{
-							created = false;
-						}
-						if (thr.status != ThreadState.Running)
-						{
-							started = false;
-							running = true;
-						}
-						if (thr.status != ThreadState.Suspended)
-						{
-							paused = false;
-						}
-						if (thr.status != ThreadState.Stopped)
-						{
-							completed = false;
-						}
+						created = false;
+					}
+					if (thr.status != ThreadState.Running)
+					{
+						started = false;
+						running = true;
+					}
+					if (thr.status != ThreadState.Suspended)
+					{
+						paused = false;
+					}
+					if (thr.status != ThreadState.Stopped)
+					{
+						completed = false;
 					}
 				}
 				if (this.SubStages.Length > 0)
@@ -378,6 +404,14 @@ namespace Threader
 							running = true;
 						}
 					}
+				}
+				if (this.Name == "INIT")
+				{
+					Console.WriteLine("PROG [" + (i / Threads.Length) + "] " + this.Name);
+				}
+				if ((i / Threads.Length) != 101)
+				{
+					return enumStatus.Running;
 				}
 				if (created)
 				{
@@ -407,15 +441,30 @@ namespace Threader
 		}
 
 		
+
+		public int getprogress()
+		{
+			int i = this.progress;
+			if (i == 101)
+			{
+				return 100;
+			}
+			else
+			{
+				return i;
+			}
+		}
+
+		
 	}
 	public class OneThread
 	{
 		public DateTime startdate;
+		public ThreadManager manager;
 		public DateTime stopdate;
 		public Stage parent;
 		private Thread thread;
 		private Action<OneThread> method;
-		public EventHandler Completed;
 		public int progress = 0;
 		private bool stopping = false;
 		public string name { get; set; }
@@ -445,22 +494,27 @@ namespace Threader
 
 		public void Start()
 		{
-			if (thread.ThreadState == ThreadState.Unstarted){
+			if (thread.ThreadState == ThreadState.Unstarted)
+			{
 				this.thread.Start();
 				this.startdate = DateTime.Now;
+				this.manager.ThreadStarting(this, new EventArgs());
 				new Thread(stopwaiting).Start();
 			}
 		}
 
 		public void stopwaiting()
 		{
-			while(this.thread.ThreadState != ThreadState.Stopped && !this.stopping )
+			Console.WriteLine(this.name+" "+this.thread.ThreadState + " " + (this.thread.ThreadState != ThreadState.Stopped )+ "\n");
+			while (this.thread.ThreadState != ThreadState.Stopped && this.thread.ThreadState != ThreadState.Unstarted)
 			{
 				Thread.Sleep(500);
 			}
 			this.parent.LastCompletedThread = this;
 			this.stopdate = DateTime.Now;
-			Completed(this, new EventArgs());
+			Console.WriteLine(this.parent.status+" "+this.name+" Acompleted"+ "\n");
+			this.manager.ThreadCompleted(this, new EventArgs());
+			this.progress = 101;
 		}
 
 		public void Reset()
@@ -477,6 +531,121 @@ namespace Threader
 				});
 				this.startdate = new DateTime();
 				this.progress = 0;
+			}
+		}
+
+		public int getprogress()
+		{
+			int i = this.progress;
+			if (i == 101)
+			{
+				return 100;
+			}else
+			{
+				return i;
+			}
+		}
+
+		public string getlastthread()
+		{
+			return _getlastthread(this.parent);
+			//if (this.parent.LastStageCompleted)
+			//{
+			//	Console.WriteLine("main : " + thr.parent.parent.Name);
+			//	if (thr.parent.parent.LastStageCompleted != null)
+			//		if (thr.parent.parent.LastStageCompleted.LastCompletedThread != null)
+			//		{
+			//			Console.WriteLine("thred : " + thr.parent.parent.LastStageCompleted.LastCompletedThread.name);
+			//			lastthr = thr.parent.parent.LastStageCompleted.LastCompletedThread.name;
+			//		}
+			//		else
+			//			Console.WriteLine("no thred : ");
+			//}
+		}
+
+		private string _getlastthread(Stage st)
+		{
+			if (st.parent != null)
+			{
+				if (st.parent.LastStageCompleted != null)
+				{
+					if(st.parent.LastStageCompleted.SubStages.Length > 0)
+					{
+						Console.WriteLine("getdownthread");
+						return getdownthread(st.parent);
+					}
+					else
+					{
+						return st.parent.LastStageCompleted.LastCompletedThread.name;
+					}
+					//return st.parent.LastStageCompleted.LastCompletedThread.name;
+				}
+				else
+				{
+					return _getlastthread(st.parent);
+				}
+			}
+			else
+			{
+				if (st == this.manager)
+				{
+					if (st.LastStageCompleted != null)
+					{
+						if (st.LastStageCompleted.SubStages.Length > 0)
+						{
+							return getdownthread(st);
+						}
+						else
+						{
+							return st.LastStageCompleted.LastCompletedThread.name;
+						}
+					}
+					else
+					{
+						return "User";
+					}
+				}
+				else
+				{
+					return "Error";
+				}
+			}
+		}
+		private string getdownthread(Stage st)
+		{
+			if (st.LastStageCompleted.SubStages.Length > 0)
+			{
+				Stage stw = _getdownthread(st.LastStageCompleted);
+				if (st.LastCompletedThread != null)
+				{
+					if (stw.LastCompletedThread.stopdate >= st.LastCompletedThread.stopdate)
+					{
+						return stw.LastCompletedThread.name;
+					}
+					else
+					{
+						return st.LastCompletedThread.name;
+					}
+				}
+				else
+				{
+					return stw.LastCompletedThread.name;
+				}
+			}
+			else
+			{
+				return st.LastCompletedThread.name;
+			}
+		}
+
+		private Stage _getdownthread(Stage st)
+		{
+			if (st.LastStageCompleted.SubStages.Length > 0)
+			{
+				return _getdownthread(st.LastStageCompleted);
+			}else
+			{
+				return st.LastStageCompleted;
 			}
 		}
 

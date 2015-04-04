@@ -37,6 +37,7 @@
 			this.savebutton = new System.Windows.Forms.ToolStripButton();
 			this.taskbutton = new System.Windows.Forms.ToolStripButton();
 			this.infobutton = new System.Windows.Forms.ToolStripButton();
+			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			this.container.ContentPanel.SuspendLayout();
 			this.container.TopToolStripPanel.SuspendLayout();
 			this.container.SuspendLayout();
@@ -51,13 +52,13 @@
 			this.container.ContentPanel.Controls.Add(this.statustreeview);
 			this.container.ContentPanel.Controls.Add(this.textbox);
 			this.container.ContentPanel.Controls.Add(this.task);
-			this.container.ContentPanel.Size = new System.Drawing.Size(540, 330);
+			this.container.ContentPanel.Size = new System.Drawing.Size(815, 330);
 			this.container.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.container.LeftToolStripPanelVisible = false;
 			this.container.Location = new System.Drawing.Point(0, 0);
 			this.container.Name = "container";
 			this.container.RightToolStripPanelVisible = false;
-			this.container.Size = new System.Drawing.Size(540, 401);
+			this.container.Size = new System.Drawing.Size(815, 401);
 			this.container.TabIndex = 0;
 			this.container.Text = "toolStripContainer1";
 			// 
@@ -78,14 +79,14 @@
 			this.textbox.Location = new System.Drawing.Point(194, 47);
 			this.textbox.MinimumSize = new System.Drawing.Size(331, 271);
 			this.textbox.Name = "textbox";
-			this.textbox.Size = new System.Drawing.Size(331, 271);
+			this.textbox.Size = new System.Drawing.Size(609, 271);
 			this.textbox.TabIndex = 6;
 			this.textbox.Text = "";
 			// 
 			// task
 			// 
 			this.task.AutoSize = true;
-			this.task.Location = new System.Drawing.Point(198, 21);
+			this.task.Location = new System.Drawing.Point(333, 22);
 			this.task.Name = "task";
 			this.task.Size = new System.Drawing.Size(323, 13);
 			this.task.TabIndex = 5;
@@ -104,7 +105,7 @@
 			this.menu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
 			this.menu.Location = new System.Drawing.Point(3, 0);
 			this.menu.Name = "menu";
-			this.menu.Size = new System.Drawing.Size(304, 71);
+			this.menu.Size = new System.Drawing.Size(205, 71);
 			this.menu.TabIndex = 1;
 			// 
 			// startbutton
@@ -149,16 +150,22 @@
 			this.infobutton.Visible = false;
 			this.infobutton.Click += new System.EventHandler(this.infobutton_Click);
 			// 
+			// saveFileDialog1
+			// 
+			this.saveFileDialog1.FileName = "Untitled.txt";
+			this.saveFileDialog1.Filter = "Text file|*.txt";
+			this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(540, 401);
+			this.ClientSize = new System.Drawing.Size(815, 401);
 			this.Controls.Add(this.container);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
-			this.MaximumSize = new System.Drawing.Size(556, 440);
-			this.MinimumSize = new System.Drawing.Size(556, 440);
+			this.MaximumSize = new System.Drawing.Size(831, 440);
+			this.MinimumSize = new System.Drawing.Size(831, 440);
 			this.Name = "Form1";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -189,6 +196,7 @@
 		private System.Windows.Forms.RichTextBox textbox;
 		private System.Windows.Forms.ToolStripButton taskbutton;
 		private System.Windows.Forms.TreeView statustreeview;
+		private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 
 	}
 }
